@@ -1,0 +1,81 @@
+= Layouts
+:toc: right
+:imagesdir: media/
+:sourcedir: ../src
+
+Layouts are essentially parts, with an extra trick up their sleve. Regions. This means that layouts may host other components, and build rich page structures.
+
+== Task: Add layout to Enonic
+
+Adding layouts is more or less identical to pages and parts. Simply follow the steps below:
+
+. **Add the `2-column` layout** to the Enonic app
++
+.src/main/resources/site/layouts/2-column/2-column.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout xmlns="urn:enonic:xp:model:1.0">
+    <display-name>2 columns</display-name>
+    <description>Provides left and right regions</description>
+    <form/>
+    <regions>
+        <region name="left"/>
+        <region name="right"/>
+    </regions>
+</layout>
+----
++
+NOTE: Just like a page, layouts may declare named regions.
++
+When completed, as always *redeploy the Enonic app*.
+
+== Task: Add layout rendering to the front-end
+
+Moving over to the the Next.js app. Add the component that will render the layout.
+
+. **Add the front-end layout component** files
++
+.src/components/layouts/TwoColumnLayout.tsx
+[source,TypeScript]
+----
+include::{sourcedir}/components/layouts/TwoColumnLayout.tsx[]
+----
++
+And it's CSS module
++
+.src/components/layouts/TwoColumnLayout.module.css
+[source,css]
+----
+include::{sourcedir}/components/layouts/TwoColumnLayout.module.css[]
+----
++
+NOTE: This is an example of using CSS modules. For more details visit the https://nextjs.org/docs/basic-features/built-in-css-support[Next.js style documentation]
++
+. **Register the component** in _mappings.ts:
++
+Add these new lines to the _mappings.ts file.
++
+.src/components/_mappings.ts
+[source,TypeScript,options="nowrap"]
+----
+import TwoColumnLayout from './layouts/TwoColumnLayout';
+
+
+// Layout mappings
+ComponentRegistry.addLayout(`${APP_NAME}:2-column`, {
+    view: TwoColumnLayout
+});
+----
++
+NOTE: this specific layout does not need any additional data - hence no query or processor:
+
+After completing these steps, you should be able to add the layout to a page, and then add components inside the layout. It might look something like this:
+
+image:layout-empty.png[title="Empty layout on the persons page",width=1440px]
+
+By combining layout, part and text we are starting to see the potential of the page editor:
+
+image:layout-part-text.png[title="Layout combined with part and text components",width=1440px]
+
+In the next chapter we will look into <<templates#, page templates>>. Page templates allow us to reuse a page definition across multiple content items.

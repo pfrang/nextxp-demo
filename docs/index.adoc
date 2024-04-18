@@ -1,0 +1,38 @@
+= Next.js website powered by Enonic XP
+:toc: right
+:imagesdir: media/
+
+This is a step-by-step tutorial on building and managing Next.js sites, using Enonic as your backend. The combined set of software and tools used in this tutorial is simply called Next.XP. 
+
+NOTE: **Looking for a demo?** Try out a <<demo#, live version of Next.XP>>.
+
+== Intro
+
+Next.XP provides an opinionated out-of-the-box integration between Enonic XP and Next.js for building websites.
+ 
+It offers content editors a familiar and hassle-free way of working with content, using structured content, component based landing pages, and extensive control over the site's URL structure.
+
+TIP: Looking to access and use Enonic's API directly? Check out the https://developer.enonic.com/docs/intro[Introduction guide], or the in-depth https://developer.enonic.com/docs/developer-101[developer 101 tutorial].
+
+image:cloud-preview.png[title="Editors enjoy WYSIWYG editing and live preview, combined with statically generated pages",width=1419px]
+
+[NOTE]
+====
+This tutorial assumes you are somewhat familiar with link:https://nextjs.org/[Next.js]. Experience with Enonic is nice, but not required. Visit our https://developer.enonic.com/docs/tutorials[Tutorials] for an introduction to Enonic.
+====
+
+You will complete the following steps:
+
+* Set up the Enonic SDK and sample content
+* Get familiar with the GraphQL API
+* Learn about the site concept in Enonic
+* Create a Next.js app from a template
+* Activate live preview in Enonic
+* Render content based on type
+* Build landing pages using components
+* Create page templates
+* Static Site Generation SSG
+* Deploy to live servers
+* How to handle multi-language sites
+
+Get started by <<enonic-setup#, setting up the Enonic development environment>>.

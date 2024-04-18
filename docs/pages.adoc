@@ -1,0 +1,124 @@
+= Custom pages
+:toc: right
+:imagesdir: media/
+:sourcedir: ../src
+
+So far, rendering has been based on hardcoded mappings made by the developer. In this chapter we will enable editors to compose their own pages.
+
+== Task: Disable debug view
+For every page you select, the debug view keeps appearing - even in Content Studio. Disable this by following the steps below.
+
+. **Comment out the `CATCH_ALL` debug view** at the bottom of your mappings file - like this:
++
+.src/components/_mappings.ts
+[source,TypeScript]
+----
+...
+
+/*
+// Debug
+ComponentRegistry.addContentType(CATCH_ALL, {
+    view: PropsView
+});
+*/
+----
++
+. **Verify that pages are no longer rendering** by visiting your site on `http://localhost:3000`.
++
+The same will now apply to Content Studio.
+
+
+== Task: Setup page rendering
+
+Content types need to exist in Enonic before an editor can create content. Similarly, page components must be defined before Content Studio can enable editors to create pages.
+
+. *Add a page component* to the Enonic app
++
+.src/main/resources/site/pages/main/main.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<page xmlns="urn:enonic:xp:model:1.0">
+  <display-name>Main page</display-name>
+  <description>Will be rendered by front-end</description>
+  <form/>
+  <regions>
+      <region name="main"/>
+  </regions>
+</page>
+----
++
+NOTE: The definition of the region `main`, allows Content Studio editors to add components to the page, as you will see later.
++
+*Redeploy the Enonic app* to register the page component.
++
+. **Configure page rendering in Next.js**
+Rendering a page is similar to rendering a content type.
+Go to the folder `./src/components`, create a new folder here called `pages`, and inside it a new file called `Main.tsx` containing the following code.
++
+IMPORTANT: Make sure to use `src/components/pages`, not `src/pages`!
++
+.src/components/pages/Main.tsx
+[source,TypeScript]
+----
+include::{sourcedir}/components/pages/Main.tsx[]
+----
++
+NOTE: The <RegionsView> element is referring to the 'main' region we defined in the page component earlier.
++
+Finally, register it in the component mappings by adding the following lines to _mappings.ts
++
+.src/components/_mappings.ts
+[source,TypeScript]
+----
+import MainPage from './pages/Main';
+
+// Page mappings
+ComponentRegistry.addPage(`${APP_NAME}:main`, {
+    view: MainPage
+});
+----
+
+Both Enonic and Next.js are now able to handle custom pages.
+
+== Task: Create your first page
+
+It's time to build a custom page.
+
+. **Turn the site into a page**
++
+From Content Studio, select and edit the `/hmdb` content item. From the edit view, activate the page editor by clicking the monitor icon in the top right corner.
++
+You should now see the following:
++
+image:page-setup.png[title="Selecting the page component in the page view",width=1440px]
++
+From the preview area, select the `Main` component we created earlier from the dropdown menu.
++
+You should then see a page with a single "dropzone" inside (the region we specified earlier).
++
+image:page-rendered.png[title="Active page controller rendering an empty region visualized by a placeholder",width=1440px]
+
+== Task: Using the text component
+
+Content Studio ships with a built-in Text component which can be handy when composing pages.
+
+. From the Insert tab (on the right hand side), drag a Text component into the region. 
+. Text mode will now be activated, and you can use the link:https://developer.enonic.com/docs/content-studio/stable/editor/component-types#text_component[rich-text editor] to write and format text, but also insert images.
++
+image:text-component.png[title="Next.js-rendered text component with an image",width=1440px]
++
+. You may also click the `Preview` button in Content Studio for a full screen version.
+
+== Task: Publish page
+Your new page is looking good. However, if you visit `http://localhost:3000[http://localhost:3000^]` - you'll get a "404 page not found" error. This is because only published changes are visible from the front end.
+
+Content Studio activates Next.js' preview mode, which in turn uses the drafts API. When accessing the front-end directly, Next.js fetches published content from the master branch.
+
+. **Publish the page** by clicking `Mark as ready...`, and then `Publish`.
++
+image:publish.png[title="Publishing wizard",width=810px]
++
+. **Verify that your page is live** by visiting `http://localhost:3000[http://localhost:3000^]` once again.
+
+That concludes the introduction to page rendering, coming up we'll add some <<parts#, configurable page components>> to play with.
